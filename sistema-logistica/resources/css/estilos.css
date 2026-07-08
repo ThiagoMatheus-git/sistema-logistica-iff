@@ -1,0 +1,58 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
+#topo {
+    background: linear-gradient(135deg, #1a237e 0%, #3949ab 100%);
+    color: white;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+#topo h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 300;
+    letter-spacing: 1px;
+}
+
+#menu {
+    background-color: #283593;
+}
+
+#conteudo {
+    padding: 25px;
+    min-height: 500px;
+}
+
+#rodape {
+    background-color: #1a237e;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    font-size: 13px;
+}
+
+#rodape p {
+    margin: 3px 0;
+}
+
+.link-inicio {
+    text-decoration: none;
+    color: inherit;
+}
+
+.link-inicio:hover .ui-panel {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    transform: translateY(-3px);
+    transition: all 0.3s ease;
+}
+
+.ui-panelgrid-blank .ui-panelgrid-cell {
+    border: none !important;
+    padding: 8px 12px;
+}

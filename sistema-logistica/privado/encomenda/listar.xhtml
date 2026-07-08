@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/templates/template.xhtml">
+        <ui:define name="titulo">Registrar Encomendas</ui:define>
+        <ui:define name="conteudo">
+            <h:form id="formListagem">
+                <p:growl id="growl" showDetail="true" autoUpdate="true"/>
+
+                <p:panel header="Listagem de Encomendas">
+                    <p:toolbar>
+                        <p:toolbarGroup>
+                            <p:commandButton value="Novo" icon="pi pi-plus"
+                                actionListener="#{encomendaController.novo}"
+                                update=":formEdicao"
+                                oncomplete="PF('dlgEdicao').show();"/>
+                        </p:toolbarGroup>
+                    </p:toolbar>
+
+                    <p:dataTable value="#{encomendaController.lista}" var="item"
+                                 emptyMessage="Nenhuma encomenda encontrada."
+                                 paginator="true" rows="10">
+                        <p:column headerText="Código Rastreio">
+                            #{item.codigoRastreio}
+                        </p:column>
+                        <p:column headerText="Valor">
+                            <h:outputText value="#{item.valor}">
+                                <f:convertNumber type="currency" currencySymbol="R$" locale="pt_BR"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Cliente">
+                            #{item.cliente.nome}
+                        </p:column>
+                        <p:column headerText="Entregador">
+                            #{item.entregador.nome}
+                        </p:column>
+                        <p:column headerText="Endereço de Entrega">
+                            #{item.cliente.endereco}
+                        </p:column>
+                        <p:column headerText="Ações" style="width: 120px; text-align: center;">
+                            <p:commandButton icon="pi pi-pencil"
+                                actionListener="#{encomendaController.editar(item.id)}"
+                                update=":formEdicao"
+                                oncomplete="PF('dlgEdicao').show();"/>
+                            <p:commandButton icon="pi pi-trash"
+                                actionListener="#{encomendaController.excluir(item.id)}"
+                                update="@form"
+                                onclick="return confirm('Confirma exclusão?')"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+            </h:form>
+
+            <p:dialog header="Registro de Encomenda" widgetVar="dlgEdicao" modal="true" width="600">
+                <h:form id="formEdicao">
+                    <p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
+                        <p:outputLabel value="Código Rastreio:" for="codigo"/>
+                        <p:inputText id="codigo" value="#{encomendaController.objeto.codigoRastreio}"
+                                     required="true" requiredMessage="Código de rastreio é obrigatório!"
+                                     size="40"/>
+
+                        <p:outputLabel value="Valor:" for="valor"/>
+                        <p:inputText id="valor" value="#{encomendaController.objeto.valor}"
+                                     required="true" requiredMessage="Valor é obrigatório!">
+                            <f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2"/>
+                        </p:inputText>
+
+                        <p:outputLabel value="Cliente:" for="cliente"/>
+                        <h:selectOneMenu id="cliente" value="#{encomendaController.clienteId}"
+                                         required="true" requiredMessage="Cliente é obrigatório!">
+                            <f:selectItem itemLabel="Selecione..." itemValue="" noSelectionOption="true"/>
+                            <f:selectItems value="#{encomendaController.listaClientes}" var="cli"
+                                           itemLabel="#{cli.nome}" itemValue="#{cli.id}"/>
+                        </h:selectOneMenu>
+
+                        <p:outputLabel value="Entregador:" for="entregador"/>
+                        <h:selectOneMenu id="entregador" value="#{encomendaController.entregadorId}"
+                                         required="true" requiredMessage="Entregador é obrigatório!">
+                            <f:selectItem itemLabel="Selecione..." itemValue="" noSelectionOption="true"/>
+                            <f:selectItems value="#{encomendaController.listaEntregadores}" var="ent"
+                                           itemLabel="#{ent.nome}" itemValue="#{ent.id}"/>
+                        </h:selectOneMenu>
+                    </p:panelGrid>
+
+                    <p:commandButton value="Salvar" icon="pi pi-check"
+                        actionListener="#{encomendaController.salvar}"
+                        update=":formListagem @form"
+                        oncomplete="if(!args.validationFailed) PF('dlgEdicao').hide();"/>
+                    <p:commandButton value="Cancelar" icon="pi pi-times"
+                        actionListener="#{encomendaController.cancelar}"
+                        onclick="PF('dlgEdicao').hide();" immediate="true"/>
+                </h:form>
+            </p:dialog>
+        </ui:define>
+    </ui:composition>
+</html>

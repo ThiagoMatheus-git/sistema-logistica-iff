@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/templates/template.xhtml">
+        <ui:define name="titulo">Gerenciar Clientes</ui:define>
+        <ui:define name="conteudo">
+            <h:form id="formListagem">
+                <p:growl id="growl" showDetail="true" autoUpdate="true"/>
+
+                <p:panel header="Listagem de Clientes">
+                    <p:toolbar>
+                        <p:toolbarGroup>
+                            <p:commandButton value="Novo" icon="pi pi-plus"
+                                actionListener="#{clienteController.novo}"
+                                update=":formEdicao"
+                                oncomplete="PF('dlgEdicao').show();"/>
+                        </p:toolbarGroup>
+                        <p:toolbarGroup align="right">
+                            <p:inputText value="#{clienteController.filtroNome}" placeholder="Filtrar por nome..."/>
+                            <p:commandButton value="Filtrar" icon="pi pi-search"
+                                actionListener="#{clienteController.filtrar}"
+                                update="@form"/>
+                            <p:commandButton value="Limpar" icon="pi pi-times"
+                                actionListener="#{clienteController.limparFiltro}"
+                                update="@form"/>
+                        </p:toolbarGroup>
+                    </p:toolbar>
+
+                    <p:dataTable value="#{clienteController.listaFiltrada}" var="item"
+                                 emptyMessage="Nenhum cliente encontrado."
+                                 paginator="true" rows="10">
+                        <p:column headerText="Nome" sortBy="#{item.nome}">
+                            #{item.nome}
+                        </p:column>
+                        <p:column headerText="CPF">
+                            <h:outputText value="#{item.cpf}">
+                                <f:converter converterId="cpfConverter"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Celular">
+                            #{item.celular}
+                        </p:column>
+                        <p:column headerText="Cidade">
+                            #{item.endereco.cidade}
+                        </p:column>
+                        <p:column headerText="Ações" style="width: 120px; text-align: center;">
+                            <p:commandButton icon="pi pi-pencil"
+                                actionListener="#{clienteController.editar(item.id)}"
+                                update=":formEdicao"
+                                oncomplete="PF('dlgEdicao').show();"/>
+                            <p:commandButton icon="pi pi-trash"
+                                actionListener="#{clienteController.excluir(item.id)}"
+                                update="@form"
+                                onclick="return confirm('Confirma exclusão?')"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+            </h:form>
+
+            <p:dialog header="Cadastro de Cliente" widgetVar="dlgEdicao" modal="true" width="700">
+                <h:form id="formEdicao">
+                    <p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
+                        <p:outputLabel value="Nome:" for="nome"/>
+                        <p:inputText id="nome" value="#{clienteController.objeto.nome}"
+                                     required="true" requiredMessage="Nome é obrigatório!"
+                                     size="50"/>
+
+                        <p:outputLabel value="CPF:" for="cpf"/>
+                        <p:inputText id="cpf" value="#{clienteController.objeto.cpf}"
+                                     required="true" requiredMessage="CPF é obrigatório!"
+                                     disabled="#{clienteController.objeto.id != null}"
+                                     size="20"/>
+
+                        <p:outputLabel value="Celular:" for="celular"/>
+                        <p:inputText id="celular" value="#{clienteController.objeto.celular}"
+                                     required="true" requiredMessage="Celular é obrigatório!"
+                                     size="20"/>
+
+                        <p:outputLabel value="Rua:" for="rua"/>
+                        <p:inputText id="rua" value="#{clienteController.objeto.endereco.rua}"
+                                     required="true" requiredMessage="Rua é obrigatória!"
+                                     size="50"/>
+
+                        <p:outputLabel value="Número:" for="numero"/>
+                        <p:inputText id="numero" value="#{clienteController.objeto.endereco.numero}"
+                                     required="true" requiredMessage="Número é obrigatório!"/>
+
+                        <p:outputLabel value="Bairro:" for="bairro"/>
+                        <p:inputText id="bairro" value="#{clienteController.objeto.endereco.bairro}"
+                                     required="true" requiredMessage="Bairro é obrigatório!"
+                                     size="40"/>
+
+                        <p:outputLabel value="Cidade:" for="cidade"/>
+                        <p:inputText id="cidade" value="#{clienteController.objeto.endereco.cidade}"
+                                     required="true" requiredMessage="Cidade é obrigatória!"
+                                     size="40"/>
+                    </p:panelGrid>
+
+                    <p:commandButton value="Salvar" icon="pi pi-check"
+                        actionListener="#{clienteController.salvar}"
+                        update=":formListagem @form"
+                        oncomplete="if(!args.validationFailed) PF('dlgEdicao').hide();"/>
+                    <p:commandButton value="Cancelar" icon="pi pi-times"
+                        actionListener="#{clienteController.cancelar}"
+                        onclick="PF('dlgEdicao').hide();" immediate="true"/>
+                </h:form>
+            </p:dialog>
+        </ui:define>
+    </ui:composition>
+</html>

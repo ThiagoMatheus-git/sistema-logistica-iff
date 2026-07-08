@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title><ui:insert name="titulo">Sistema de Logística</ui:insert></title>
+        <h:outputStylesheet library="css" name="estilos.css" />
+    </h:head>
+    <h:body>
+        <div id="topo">
+            <h1>Sistema de Logística e Controle de Entregas</h1>
+        </div>
+
+        <div id="menu">
+            <h:form>
+                <p:menubar>
+                    <p:menuitem value="Início" outcome="/index" icon="pi pi-home"/>
+                    <p:menuitem value="Gerenciar Clientes" outcome="/privado/cliente/listar" icon="pi pi-users"/>
+                    <p:menuitem value="Gerenciar Entregadores" outcome="/privado/entregador/listar" icon="pi pi-car"/>
+                    <p:menuitem value="Registrar Encomendas" outcome="/privado/encomenda/listar" icon="pi pi-box"/>
+                    <p:menuitem value="Relatórios de Entregas" outcome="/privado/relatorio/listar" icon="pi pi-chart-bar"/>
+                </p:menubar>
+            </h:form>
+        </div>
+
+        <div id="conteudo">
+            <ui:insert name="conteudo">
+                Conteúdo
+            </ui:insert>
+        </div>
+
+        <div id="rodape">
+            <p>Sistemas de Informação – 5º Período</p>
+            <p>Desenvolvimento de Aplicações - 2026/1</p>
+        </div>
+    </h:body>
+</html>

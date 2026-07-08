@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/templates/template.xhtml">
+        <ui:define name="titulo">Gerenciar Entregadores</ui:define>
+        <ui:define name="conteudo">
+            <h:form id="formListagem">
+                <p:growl id="growl" showDetail="true" autoUpdate="true"/>
+
+                <p:panel header="Listagem de Entregadores">
+                    <p:toolbar>
+                        <p:toolbarGroup>
+                            <p:commandButton value="Novo" icon="pi pi-plus"
+                                actionListener="#{entregadorController.novo}"
+                                update=":formEdicao"
+                                oncomplete="PF('dlgEdicao').show();"/>
+                        </p:toolbarGroup>
+                        <p:toolbarGroup align="right">
+                            <p:inputText value="#{entregadorController.filtroNome}" placeholder="Filtrar por nome..."/>
+                            <p:commandButton value="Filtrar" icon="pi pi-search"
+                                actionListener="#{entregadorController.filtrar}"
+                                update="@form"/>
+                            <p:commandButton value="Limpar" icon="pi pi-times"
+                                actionListener="#{entregadorController.limparFiltro}"
+                                update="@form"/>
+                        </p:toolbarGroup>
+                    </p:toolbar>
+
+                    <p:dataTable value="#{entregadorController.listaFiltrada}" var="item"
+                                 emptyMessage="Nenhum entregador encontrado."
+                                 paginator="true" rows="10">
+                        <p:column headerText="Nome" sortBy="#{item.nome}">
+                            #{item.nome}
+                        </p:column>
+                        <p:column headerText="CNH">
+                            #{item.cnh}
+                        </p:column>
+                        <p:column headerText="Categoria CNH">
+                            #{item.categoriaCnh}
+                        </p:column>
+                        <p:column headerText="Celular">
+                            #{item.celular}
+                        </p:column>
+                        <p:column headerText="Cidade">
+                            #{item.endereco.cidade}
+                        </p:column>
+                        <p:column headerText="Ações" style="width: 120px; text-align: center;">
+                            <p:commandButton icon="pi pi-pencil"
+                                actionListener="#{entregadorController.editar(item.id)}"
+                                update=":formEdicao"
+                                oncomplete="PF('dlgEdicao').show();"/>
+                            <p:commandButton icon="pi pi-trash"
+                                actionListener="#{entregadorController.excluir(item.id)}"
+                                update="@form"
+                                onclick="return confirm('Confirma exclusão?')"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+            </h:form>
+
+            <p:dialog header="Cadastro de Entregador" widgetVar="dlgEdicao" modal="true" width="700">
+                <h:form id="formEdicao">
+                    <p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
+                        <p:outputLabel value="Nome:" for="nome"/>
+                        <p:inputText id="nome" value="#{entregadorController.objeto.nome}"
+                                     required="true" requiredMessage="Nome é obrigatório!"
+                                     size="50"/>
+
+                        <p:outputLabel value="Celular:" for="celular"/>
+                        <p:inputText id="celular" value="#{entregadorController.objeto.celular}"
+                                     required="true" requiredMessage="Celular é obrigatório!"
+                                     size="20"/>
+
+                        <p:outputLabel value="CNH:" for="cnh"/>
+                        <p:inputText id="cnh" value="#{entregadorController.objeto.cnh}"
+                                     required="true" requiredMessage="CNH é obrigatória!"
+                                     size="20"/>
+
+                        <p:outputLabel value="Categoria CNH:" for="categoria"/>
+                        <h:selectOneMenu id="categoria" value="#{entregadorController.objeto.categoriaCnh}"
+                                         required="true" requiredMessage="Categoria CNH é obrigatória!">
+                            <f:selectItem itemLabel="Selecione..." itemValue="" noSelectionOption="true"/>
+                            <f:selectItems value="#{entregadorController.categoriasCNH}" var="cat"
+                                           itemLabel="#{cat}" itemValue="#{cat}"/>
+                        </h:selectOneMenu>
+
+                        <p:outputLabel value="Rua:" for="rua"/>
+                        <p:inputText id="rua" value="#{entregadorController.objeto.endereco.rua}"
+                                     required="true" requiredMessage="Rua é obrigatória!"
+                                     size="50"/>
+
+                        <p:outputLabel value="Número:" for="numero"/>
+                        <p:inputText id="numero" value="#{entregadorController.objeto.endereco.numero}"
+                                     required="true" requiredMessage="Número é obrigatório!"/>
+
+                        <p:outputLabel value="Bairro:" for="bairro"/>
+                        <p:inputText id="bairro" value="#{entregadorController.objeto.endereco.bairro}"
+                                     required="true" requiredMessage="Bairro é obrigatório!"
+                                     size="40"/>
+
+                        <p:outputLabel value="Cidade:" for="cidade"/>
+                        <p:inputText id="cidade" value="#{entregadorController.objeto.endereco.cidade}"
+                                     required="true" requiredMessage="Cidade é obrigatória!"
+                                     size="40"/>
+                    </p:panelGrid>
+
+                    <p:commandButton value="Salvar" icon="pi pi-check"
+                        actionListener="#{entregadorController.salvar}"
+                        update=":formListagem @form"
+                        oncomplete="if(!args.validationFailed) PF('dlgEdicao').hide();"/>
+                    <p:commandButton value="Cancelar" icon="pi pi-times"
+                        actionListener="#{entregadorController.cancelar}"
+                        onclick="PF('dlgEdicao').hide();" immediate="true"/>
+                </h:form>
+            </p:dialog>
+        </ui:define>
+    </ui:composition>
+</html>
